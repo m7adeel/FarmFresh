@@ -73,7 +73,7 @@ export default function HomeScreen() {
               <TouchableOpacity 
                 key={index} 
                 style={styles.vendorCard}
-                onPress={() => router.push(`/vendor/${vendor.id}`)}
+                onPress={() => router.push(`/market/vendor/${vendor.id}`)}
               >
                 <Image source={{ uri: vendor.image }} style={styles.vendorImage} />
                 <View style={styles.vendorInfo}>
@@ -99,7 +99,7 @@ export default function HomeScreen() {
               <TouchableOpacity 
                 key={index} 
                 style={styles.productCard}
-                onPress={() => router.push(`/product/${product.id}`)}
+                onPress={() => router.push(`/market/product/${product.id}`)}
               >
                 <Image source={{ uri: product.image }} style={styles.productImage} />
                 <View style={styles.productBadge}>
