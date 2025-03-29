@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ArrowLeft, Clock, MapPin, Phone, MessageSquare, Shield } from 'lucide-react-native';
-import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView, { Marker, Polyline, PROVIDER_DEFAULT } from 'react-native-maps';
 import { router } from 'expo-router';
 
 // Define types
@@ -81,7 +81,7 @@ export default function DeliveryTrackingScreen({ route, navigation }: any) {
     ],
   });
 
-  const [isMapReady, setIsMapReady] = useState(false);
+  const [isMapReady, setIsMapReady] = useState(true);
 
   // Simulate rider movement
   useEffect(() => {
@@ -213,7 +213,7 @@ export default function DeliveryTrackingScreen({ route, navigation }: any) {
         <View style={styles.mapContainer}>
           {isMapReady && (
             <MapView
-              
+              provider={PROVIDER_DEFAULT}
               style={styles.map}
               region={getMapRegion()}
               initialRegion={getMapRegion()}
@@ -401,7 +401,7 @@ const styles = StyleSheet.create({
     marginLeft: 6,
   },
   mapContainer: {
-    height: 220,
+    height: 300,
     marginBottom: 16,
     overflow: 'hidden',
   },
