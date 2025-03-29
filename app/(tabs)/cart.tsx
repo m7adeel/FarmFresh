@@ -1,60 +1,21 @@
 import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Minus, Plus, Trash2 } from 'lucide-react-native';
-import { useState } from 'react';
-
-type CartItem = {
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
-  image: string;
-  vendor: string;
-  market: string;
-};
+import { CartItem } from '@/types';
+import useCartStore, { CartStore } from '@/store/useCartStore';
 
 export default function CartScreen() {
-  const [cartItems, setCartItems] = useState<CartItem[]>([
-    {
-      id: '1',
-      name: 'Fresh Organic Strawberries',
-      price: 4.99,
-      quantity: 2,
-      image: 'https://images.unsplash.com/photo-1518635017498-87f514b751ba?q=80&w=2940&auto=format&fit=crop',
-      vendor: 'Berry Good Farm',
-      market: 'Downtown Farmers Market',
-    },
-    {
-      id: '2',
-      name: 'Artisanal Sourdough Bread',
-      price: 6.99,
-      quantity: 1,
-      image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?q=80&w=2940&auto=format&fit=crop',
-      vendor: 'Crusty Corner Bakery',
-      market: 'Downtown Farmers Market',
-    },
-    {
-      id: '3',
-      name: 'Farm Fresh Eggs (Dozen)',
-      price: 5.99,
-      quantity: 1,
-      image: 'https://images.unsplash.com/photo-1569288052389-dac9b0ac9efd?q=80&w=2940&auto=format&fit=crop',
-      vendor: 'Happy Hens Farm',
-      market: 'Downtown Farmers Market',
-    },
-  ]);
+  const { cart, addItemToCart, removeItemFromCart } = useCartStore() as CartStore;
 
-  const updateQuantity = (id: string, change: number) => {
-    setCartItems(items =>
-      items.map(item =>
-        item.id === id
-          ? { ...item, quantity: Math.max(0, item.quantity + change) }
-          : item
-      ).filter(item => item.quantity > 0)
-    );
+  const updateQuantity = (item: CartItem, change: number) => {
+    if (change < 0) {
+      removeItemFromCart(item);
+    } else {
+      addItemToCart(item);
+    }
   };
 
-  const subtotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const subtotal = cart.reduce((sum: number, item: CartItem) => sum + item.price * item.quantity, 0);
   const tax = subtotal * 0.08;
   const total = subtotal + tax;
 
@@ -62,12 +23,12 @@ export default function CartScreen() {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Shopping Cart</Text>
-        <Text style={styles.subtitle}>{cartItems.length} items from Downtown Farmers Market</Text>
+        <Text style={styles.subtitle}>{cart.length} items from Downtown Farmers Market</Text>
       </View>
 
       <ScrollView style={styles.itemsList}>
-        {cartItems.map(item => (
-          <View key={item.id} style={styles.cartItem}>
+        {cart.map((item: CartItem) => (
+          <View key={item.itemId} style={styles.cartItem}>
             <Image source={{ uri: item.image }} style={styles.itemImage} />
             <View style={styles.itemDetails}>
               <View style={styles.itemHeader}>
@@ -77,7 +38,7 @@ export default function CartScreen() {
               <Text style={styles.vendorName}>{item.vendor}</Text>
               <View style={styles.quantityControls}>
                 <TouchableOpacity
-                  onPress={() => updateQuantity(item.id, -1)}
+                  onPress={() => updateQuantity(item, -1)}
                   style={styles.quantityButton}
                 >
                   {item.quantity === 1 ? (
@@ -88,7 +49,7 @@ export default function CartScreen() {
                 </TouchableOpacity>
                 <Text style={styles.quantity}>{item.quantity}</Text>
                 <TouchableOpacity
-                  onPress={() => updateQuantity(item.id, 1)}
+                  onPress={() => updateQuantity(item, 1)}
                   style={styles.quantityButton}
                 >
                   <Plus size={20} color="#4b5563" />

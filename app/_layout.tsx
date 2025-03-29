@@ -47,7 +47,7 @@ export default function RootLayout() {
     try {
       await AsyncStorage.setItem('hasLaunched', 'true');
       setShowOnboarding(false);
-      router.replace('/(tabs)');
+      router.replace('/(auth)/splash');
     } catch (error) {
       console.error('Error saving launch status:', error);
     }

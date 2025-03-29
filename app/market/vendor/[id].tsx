@@ -2,14 +2,12 @@ import { useLocalSearchParams, router } from 'expo-router';
 import { View, Text, ScrollView, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useState } from 'react';
-
-interface CartItem extends VendorItem {
-  quantity: number;
-}
+import useCartStore from '@/store/useCartStore';
+import { CartItem } from '@/types';
 
 export default function VendorDetailScreen() {
   const { id, marketId } = useLocalSearchParams();
-  const [cart, setCart] = useState<CartItem[]>([]);
+  const { cart, addItemToCart } = useCartStore();
   
   // Mock data - in a real app, fetch based on vendor ID
   const vendor = {
@@ -23,36 +21,28 @@ export default function VendorDetailScreen() {
       {
         id: '1',
         name: 'Organic Tomatoes',
-        price: '$4.99/lb',
+        price: 4.99,
         description: 'Fresh, locally grown organic tomatoes',
         image: 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea',
         category: 'Vegetables',
-        inStock: true
+        inStock: true,
+        itemId: 'i-4'
       },
       {
         id: '2',
         name: 'Fresh Lettuce',
-        price: '$2.99/head',
+        price: 2.99,
         description: 'Crisp, organic lettuce',
         image: 'https://images.unsplash.com/photo-1622206151246-71f91e07211f',
         category: 'Vegetables',
-        inStock: true
+        inStock: true,
+        itemId: 'i-5'
       }
     ]
   };
 
-  const addToCart = (item: VendorItem) => {
-    setCart(currentCart => {
-      const existingItem = currentCart.find(cartItem => cartItem.id === item.id);
-      if (existingItem) {
-        return currentCart.map(cartItem =>
-          cartItem.id === item.id
-            ? { ...cartItem, quantity: cartItem.quantity + 1 }
-            : cartItem
-        );
-      }
-      return [...currentCart, { ...item, quantity: 1 }];
-    });
+  const addToCart = (item: CartItem) => {
+    addItemToCart(item)
   };
 
   return (
