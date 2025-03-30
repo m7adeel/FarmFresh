@@ -5,6 +5,7 @@ export interface CartStore {
     cart: CartItem[];
     addItemToCart: (item: CartItem) => void;
     removeItemFromCart: (item: CartItem) => void;
+    emptyCart: () => void;
 }
 
 const dummyData: CartItem[] = [
@@ -94,6 +95,7 @@ const useCartStore = create<CartStore>((set) => ({
             }
         });
     },
+    emptyCart: () => set({ cart: [] }),
 }))
 
 export default useCartStore;

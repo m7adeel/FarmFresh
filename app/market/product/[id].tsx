@@ -1,15 +1,17 @@
+import useCartStore, { CartStore } from '@/store/useCartStore';
 import { useLocalSearchParams, router } from 'expo-router';
 import { View, Text, ScrollView, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ProductDetailScreen() {
   const { id } = useLocalSearchParams();
+  const { addItemToCart } = useCartStore() as CartStore;
 
   // Mock data - in a real app, fetch based on product ID
   const product = {
     id: '1',
     name: 'Organic Tomatoes',
-    price: '$4.99/lb',
+    price: 4.99,
     description: 'Fresh, locally grown organic tomatoes from our family farm. These tomatoes are picked at peak ripeness and delivered directly to the market.',
     image: 'https://images.unsplash.com/photo-1592924357228-91a4daadcfea',
     category: 'Vegetables',
@@ -21,7 +23,8 @@ export default function ProductDetailScreen() {
       carbs: '3.9g',
       fiber: '1.2g'
     },
-    inStock: true
+    inStock: true,
+    itemId: 'i-4'
   };
 
   return (
@@ -54,7 +57,7 @@ export default function ProductDetailScreen() {
             disabled={!product.inStock}
             onPress={() => {
               // Add to cart logic here
-              router.push('/cart');
+              addItemToCart(product)
             }}
           >
             <Text style={styles.addToCartText}>

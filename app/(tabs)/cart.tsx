@@ -3,6 +3,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Minus, Plus, Trash2 } from 'lucide-react-native';
 import { CartItem } from '@/types';
 import useCartStore, { CartStore } from '@/store/useCartStore';
+import { router } from 'expo-router';
 
 export default function CartScreen() {
   const { cart, addItemToCart, removeItemFromCart } = useCartStore() as CartStore;
@@ -74,7 +75,7 @@ export default function CartScreen() {
           <Text style={styles.totalLabel}>Total</Text>
           <Text style={styles.totalValue}>${total.toFixed(2)}</Text>
         </View>
-        <TouchableOpacity style={styles.checkoutButton}>
+        <TouchableOpacity style={styles.checkoutButton} onPress={() => router.push('/checkout_order')}>
           <Text style={styles.checkoutButtonText}>Proceed to Checkout</Text>
         </TouchableOpacity>
       </View>
