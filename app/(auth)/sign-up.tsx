@@ -3,15 +3,19 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image, ScrollView 
 import { Link, router } from 'expo-router';
 import { Eye, EyeOff, ArrowLeft } from 'lucide-react-native';
 
+import useUserStore from '@/store/useUserStore';
+
 export default function SignUpScreen() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const { signUpWithEmailAndPassword } = useUserStore();
 
   const handleSignUp = () => {
-    // TODO: Implement actual registration
-    router.replace('/(tabs)');
+    signUpWithEmailAndPassword(email, password).then(() => {
+      router.replace('/(tabs)');
+    })
   };
 
   return (

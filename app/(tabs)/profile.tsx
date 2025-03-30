@@ -3,14 +3,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Settings, CreditCard, MapPin, Heart, ShoppingBag, Bell, CircleHelp as HelpCircle, ChevronRight, LogOut } from 'lucide-react-native';
 import { router } from 'expo-router';
 
-export default function ProfileScreen() {
-  const user = {
-    name: 'Sarah Johnson',
-    email: 'sarah.johnson@example.com',
-    avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=2940&auto=format&fit=crop',
-    memberSince: 'Member since September 2023',
-  };
+import useUserStore from '@/store/useUserStore';
 
+export default function ProfileScreen() {  
+  const { user, logout } = useUserStore();
+  
   const menuSections = [
     {
       title: 'Account',
@@ -41,11 +38,11 @@ export default function ProfileScreen() {
       <ScrollView>
         <View style={styles.header}>
           <View style={styles.profileInfo}>
-            <Image source={{ uri: user.avatar }} style={styles.avatar} />
+            <Image source={{ uri: user?.photoURL }} style={styles.avatar} />
             <View style={styles.userInfo}>
-              <Text style={styles.name}>{user.name}</Text>
-              <Text style={styles.email}>{user.email}</Text>
-              <Text style={styles.memberSince}>{user.memberSince}</Text>
+              <Text style={styles.name}>{user?.displayName}</Text>
+              <Text style={styles.email}>{user?.email}</Text>
+              {/* <Text style={styles.memberSince}>{user.}</Text> */}
             </View>
           </View>
         </View>
@@ -92,7 +89,7 @@ export default function ProfileScreen() {
         ))}
 
         <TouchableOpacity style={styles.logoutButton} onPress={() => {
-          router.replace('/(auth)/splash')
+          logout().then(() => {router.replace('/(auth)/splash')})
         }}>
           <LogOut size={20} color="#dc2626" />
           <Text style={styles.logoutText}>Log Out</Text>

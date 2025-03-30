@@ -3,14 +3,23 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image } from 'reac
 import { Link, router } from 'expo-router';
 import { Eye, EyeOff } from 'lucide-react-native';
 
+import useUserStore from '@/store/useUserStore';
+
 export default function SignInScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
+  const { login } = useUserStore();
+
   const handleSignIn = () => {
-    // TODO: Implement actual authentication
-    router.replace('/(tabs)');
+    login(email, password)
+      .then(() => {
+        router.replace('/(tabs)');
+      })
+      .catch((error) => {
+        console.error('Login error:', error);
+      });
   };
 
   return (
